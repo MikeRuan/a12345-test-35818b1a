@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 My Reading Log</title>
+<style>
+  /* Fun, colorful styling for the reading log */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: white;
+    font-size: 2.2em;
+    margin-bottom: 6px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  }
+
+  .subtitle {
+    text-align: center;
+    color: rgba(255,255,255,0.85);
+    font-size: 1em;
+    margin-bottom: 24px;
+  }
+
+  /* The input form card */
+  .form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 30px;
+    max-width: 520px;
+    margin: 0 auto 30px auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  .form-card h2 {
+    font-size: 1.2em;
+    color: #5a4fcf;
+    margin-bottom: 18px;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 5px;
+    font-size: 0.95em;
+  }
+
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 1em;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+    color: #333;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus,
+  textarea:focus {
+    border-color: #667eea;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  /* Emoji mood picker row */
+  .mood-label { margin-bottom: 8px; }
+
+  .mood-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .mood-btn {
+    font-size: 1.6em;
+    background: #f4f4f4;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .mood-btn:hover { transform: scale(1.2); background: #ede8ff; }
+  .mood-btn.selected { border-color: #667eea; background: #ede8ff; transform: scale(1.15); }
+
+  /* Add button */
+  #addBtn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea, #f093fb);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  #addBtn:hover { opacity: 0.9; transform: translateY(-2px); }
+  #addBtn:active { transform: translateY(0); }
+
+  /* Stats bar */
+  .stats-bar {
+    max-width: 520px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: rgba(255,255,255,0.85);
+    border-radius: 30px;
+    padding: 8px 18px;
+    font-weight: bold;
+    color: #5a4fcf;
+    font-size: 0.95em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  /* Log entries list */
+  .log-title {
+    text-align: center;
+    color: white;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 16px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  }
+
+  #logList {
+    max-width: 520px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Individual book card */
+  .book-card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    animation: slideIn 0.35s ease;
+    position: relative;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .book-emoji { font-size: 2.2em; flex-shrink: 0; margin-top: 2px; }
+
+  .book-info { flex: 1; }
+
+  .book-title-text {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .book-meta {
+    font-size: 0.88em;
+    color: #888;
+    margin-bottom: 6px;
+  }
+
+  .book-thought {
+    font-size: 0.95em;
+    color: #555;
+    background: #f7f5ff;
+    border-left: 3px solid #a78bfa;
+    padding: 7px 10px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* Delete button on each card */
+  .delete-btn {
+    background: none;
+    border: none;
+    font-size: 1.1em;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.2s;
+    padding: 0 0 0 6px;
+    flex-shrink: 0;
+  }
+  .delete-btn:hover { color: #f44; }
+
+  /* Empty state message */
+  #emptyMsg {
+    text-align: center;
+    color: rgba(255,255,255,0.75);
+    font-size: 1em;
+    margin-top: 8px;
+    display: none;
+  }
+
+  /* Error shake animation */
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  .shake { animation: shake 0.3s ease; }
+
+  /* Mobile friendly adjustments */
+  @media (max-width: 480px) {
+    h1 { font-size: 1.7em; }
+    .form-card { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>📚 My Reading Log</h1>
+<p class="subtitle">Track every book you read — one page at a time!</p>
+
+<!-- Input Form -->
+<div class="form-card">
+  <h2>➕ Add a Book</h2>
+
+  <label for="titleInput">Book Title</label>
+  <input type="text" id="titleInput" placeholder="e.g. Harry Potter and the Sorcerer's Stone" maxlength="80">
+
+  <label for="pagesInput">Number of Pages Read</label>
+  <input type="number" id="pagesInput" placeholder="e.g. 223" min="1" max="9999">
+
+  <label for="genreSelect">Genre</label>
+  <select id="genreSelect">
+    <option value="">— Pick a genre —</option>
+    <option value="Fantasy">🧙 Fantasy</option>
+    <option value="Adventure">🗺️ Adventure</option>
+    <option value="Mystery">🔍 Mystery</option>
+    <option value="Sci-Fi">🚀 Sci-Fi</option>
+    <option value="Humor">😂 Humor</option>
+    <option value="Non-Fiction">📰 Non-Fiction</option>
+    <option value="Historical">🏛️ Historical</option>
+    <option value="Other">📖 Other</option>
+  </select>
+
+  <label class="mood-label">How did this book make you feel?</label>
+  <div class="mood-row" id="moodRow">
+    <button class="mood-btn" data-mood="😄 Happy">😄</button>
+    <button class="mood-btn" data-mood="😢 Sad">😢</button>
+    <button class="mood-btn" data-mood="😱 Surprised">😱</button>
+    <button class="mood-btn" data-mood="🤩 Amazed">🤩</button>
+    <button class="mood-btn" data-mood="😂 Laughing">😂</button>
+    <button class="mood-btn" data-mood="🤔 Thoughtful">🤔</button>
+    <button class="mood-btn" data-mood="😴 Bored">😴</button>
+    <button class="mood-btn" data-mood="😤 Frustrated">😤</button>
+  </div>
+
+  <label for="thoughtInput">One Feeling or Big Idea from this Book</label>
+  <textarea id="thoughtInput" placeholder="e.g. I learned that bravery means doing things even when you're scared."></textarea>
+
+  <button id="addBtn">📖 Add to My Log</button>
+</div>
+
+<!-- Stats Pills -->
+<div class="stats-bar">
+  <div class="stat-pill">📚 Books: <span id="statBooks">0</span></div>
+  <div class="stat-pill">📄 Pages: <span id="statPages">0</span></div>
+  <div class="stat-pill">⭐ Fave Genre: <span id="statGenre">—</span></div>
+</div>
+
+<!-- Log List -->
+<p class="log-title" id="logTitle" style="display:none;">📋 My Books So Far</p>
+<div id="logList"></div>
+<p id="emptyMsg">No books yet — add your first one above! 🌟</p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  // ── State variables ──────────────────────────────────────────────
+  var books = [];          // array of book objects
+  var selectedMood = '';   // currently selected mood emoji string
+
+  // ── Grab elements ────────────────────────────────────────────────
+  var titleInput   = document.getElementById('titleInput');
+  var pagesInput   = document.getElementById('pagesInput');
+  var genreSelect  = document.getElementById('genreSelect');
+  var thoughtInput = document.getElementById('thoughtInput');
+  var addBtn       = document.getElementById('addBtn');
+  var logList      = document.getElementById('logList');
+  var emptyMsg     = document.getElementById('emptyMsg');
+  var logTitle     = document.getElementById('logTitle');
+  var statBooks    = document.getElementById('statBooks');
+  var statPages    = document.getElementById('statPages');
+  var statGenre    = document.getElementById('statGenre');
+  var moodRow      = document.getElementById('moodRow');
+
+  // ── Mood button selection ─────────────────────────────────────────
+  // Loop through all mood buttons and attach click listeners
+  var moodBtns = moodRow ? moodRow.querySelectorAll('.mood-btn') : [];
+  moodBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      // Deselect all, then select the clicked one
+      moodBtns.forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      selectedMood = btn.getAttribute('data-mood');
+    });
+  });
+
+  // ── Genre emoji helper ────────────────────────────────────────────
+  function genreEmoji(genre) {
+    var map = {
+      'Fantasy':'🧙','Adventure':'🗺️','Mystery':'��','Sci-Fi':'🚀',
+      'Humor':'😂','Non-Fiction':'📰','Historical':'🏛️','Other':'📖',
+      '':'📚'
+    };
+    return map[genre] || '📚';
+  }
+
+  // ── Add button click handler ──────────────────────────────────────
+  if (addBtn) addBtn.addEventListener('click', function() {
+    var title   = titleInput.value.trim();
+    var pages   = parseInt(pagesInput.value, 10);
+    var genre   = genreSelect.value;
+    var thought = thoughtInput.value.trim();
+
+    // Basic validation — title is required
+    if (!title) {
+      titleInput.classList.add('shake');
+      titleInput.focus();
+      setTimeout(function() { titleInput.classList.remove('shake'); }, 400);
+      return;
+    }
+
+    // Pages must be a positive number
+    if (!pages || pages < 1) {
+      pagesInput.classList.add('shake');
+      pagesInput.focus();
+      setTimeout(function() { pagesInput.classList.remove('shake'); }, 400);
+      return;
+    }
+
+    // Build the book object
+    var book = {
+      id:      Date.now(),
+      title:   title,
+      pages:   pages,
+      genre:   genre,
+      mood:    selectedMood || '📖 Read',
+      thought: thought || '(No note left)',
+      date:    new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
+    };
+
+    // Add to beginning of array so newest is on top
+    books.unshift(book);
+
+    // Render the new card and update stats
+    renderCard(book, true);
+    updateStats();
+    clearForm();
+  });
+
+  // ── Render a single book card ─────────────────────────────────────
+  function renderCard(book, prepend) {
+    var card = document.createElement('div');
+    card.className = 'book-card';
+    card.setAttribute('data-id', book.id);
+
+    card.innerHTML =
+      '<div class="book-emoji">' + genreEmoji(book.genre) + '</div>' +
+      '<div class="book-info">' +
+        '<div class="book-title-text">' + escapeHTML(book.title) + '</div>' +
+        '<div class="book-meta">' +
+          (book.genre ? book.genre + ' · ' : '') +
+          book.pages + ' pages · ' + book.mood + ' · ' + book.date +
+        '</div>' +
+        '<div class="book-thought">"' + escapeHTML(book.thought) + '"</div>' +
+      '</div>' +
+      '<button class="delete-btn" title="Remove book" aria-label="Delete">🗑️</button>';
+
+    // Attach delete listener to this card's button
+    var delBtn = card.querySelector('.delete-btn');
+    if (delBtn) {
+      delBtn.addEventListener('click', function() {
+        deleteBook(book.id, card);
+      });
+    }
+
+    if (prepend && logList.firstChild) {
+      logList.insertBefore(card, logList.firstChild);
+    } else {
+      logList.appendChild(card);
+    }
+
+    showLogSection();
+  }
+
+  // ── Delete a book ─────────────────────────────────────────────────
+  function deleteBook(id, card) {
+    // Fade out the card, then remove it
+    card.style.transition = 'opacity 0.3s, transform 0.3s';
+    card.style.opacity = '0';
+    card.style.transform = 'translateX(40px)';
+    setTimeout(function() {
+      card.remove();
+      books = books.filter(function(b) { return b.id !== id; });
+      updateStats();
+      if (books.length === 0) hideLogSection();
+    }, 300);
+  }
+
+  // ── Update stats pills ────────────────────────────────────────────
+  function updateStats() {
+    var total = books.length;
+    var pages = books.reduce(function(sum, b) { return sum + b.pages; }, 0);
+
+    // Find most common genre
+    var genreCounts = {};
+    books.forEach(function(b) {
+      if (b.genre) {
+        genreCounts[b.genre] = (genreCounts[b.genre] || 0) + 1;
+      }
+    });
+    var topGenre = '—';
+    var topCount = 0;
+    Object.keys(genreCounts).forEach(function(g) {
+      if (genreCounts[g] > topCount) { topCount = genreCounts[g]; topGenre = g; }
+    });
+
+    statBooks.textContent = total;
+    statPages.textContent = pages.toLocaleString();
+    statGenre.textContent = topGenre;
+  }
+
+  // ── Show / hide the log section ───────────────────────────────────
+  function showLogSection() {
+    logTitle.style.display = 'block';
+    emptyMsg.style.display = 'none';
+  }
+
+  function hideLogSection() {
+    logTitle.style.display = 'none';
+    emptyMsg.style.display = 'block';
+  }
+
+  // ── Clear the form after adding ───────────────────────────────────
+  function clearForm() {
+    titleInput.value   = '';
+    pagesInput.value   = '';
+    genreSelect.value  = '';
+    thoughtInput.value = '';
+    selectedMood = '';
+    moodBtns.forEach(function(b) { b.classList.remove('selected'); });
+    titleInput.focus();
+  }
+
+  // ── Simple HTML escape to prevent XSS ────────────────────────────
+  function escapeHTML(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── Initial state: show the empty message ─────────────────────────
+  emptyMsg.style.display = 'block';
+
+  // BUTTON CHECKLIST: #addBtn ✓  .mood-btn (all) ✓  .delete-btn (dynamic) ✓
+
+});
+
+  /* auto-injected handler for #titleInput */
+  var _btn_titleInput = document.getElementById('titleInput');
+  if (_btn_titleInput) _btn_titleInput.addEventListener('click', function() {
+    var ss = document.getElementById('startScreen') || document.querySelector('.start-screen, .menu, #menu');
+    var cv = document.querySelector('canvas');
+    if (ss) ss.style.display = 'none';
+    if (cv) cv.style.display = 'block';
+  });
+  /* auto-injected handler for #pagesInput */
+  var _btn_pagesInput = document.getElementById('pagesInput');
+  if (_btn_pagesInput) _btn_pagesInput.addEventListener('click', function() {
+    var ss = document.getElementById('startScreen') || document.querySelector('.start-screen, .menu, #menu');
+    var cv = document.querySelector('canvas');
+    if (ss) ss.style.display = 'none';
+    if (cv) cv.style.display = 'block';
+  });
+</script>
+</body>
+</html>
