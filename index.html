@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📚 My Reading Log</title>
+<title>✅ My Habit Tracker</title>
 <style>
-  /* Fun, colorful styling for the reading log */
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+    background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
     min-height: 100vh;
     padding: 20px;
   }
@@ -25,462 +24,479 @@
 
   .subtitle {
     text-align: center;
-    color: rgba(255,255,255,0.85);
+    color: rgba(255,255,255,0.88);
     font-size: 1em;
-    margin-bottom: 24px;
+    margin-bottom: 26px;
   }
 
-  /* The input form card */
-  .form-card {
-    background: white;
-    border-radius: 20px;
-    padding: 28px 30px;
-    max-width: 520px;
-    margin: 0 auto 30px auto;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  }
-
-  .form-card h2 {
-    font-size: 1.2em;
-    color: #5a4fcf;
-    margin-bottom: 18px;
-  }
-
-  label {
-    display: block;
+  /* Date strip */
+  .date-strip {
+    text-align: center;
+    color: white;
+    font-size: 1em;
     font-weight: bold;
-    color: #444;
-    margin-bottom: 5px;
-    font-size: 0.95em;
+    margin-bottom: 20px;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
   }
 
-  input[type="text"], input[type="number"], select, textarea {
+  /* Main card */
+  .main-card {
+    background: white;
+    border-radius: 22px;
+    padding: 28px 28px 22px;
+    max-width: 500px;
+    margin: 0 auto 26px auto;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+  }
+
+  .main-card h2 {
+    font-size: 1.15em;
+    color: #185a9d;
+    margin-bottom: 20px;
+  }
+
+  /* Each habit row */
+  .habit-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    background: #f5f9ff;
+    border: 2px solid #e0ecff;
+    transition: background 0.25s, border-color 0.25s, transform 0.15s;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .habit-row:hover { transform: translateY(-2px); background: #eaf3ff; }
+
+  .habit-row.done {
+    background: #e8fdf0;
+    border-color: #5edc8a;
+  }
+
+  /* Circle check button */
+  .check-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 3px solid #b0c8f0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3em;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+
+  .habit-row.done .check-circle {
+    background: #2ecc71;
+    border-color: #2ecc71;
+    transform: scale(1.15);
+  }
+
+  .habit-emoji { font-size: 1.7em; flex-shrink: 0; }
+
+  .habit-label {
+    flex: 1;
+    font-size: 1.05em;
+    font-weight: bold;
+    color: #333;
+    transition: color 0.2s;
+  }
+
+  .habit-row.done .habit-label {
+    color: #1a8a4a;
+    text-decoration: line-through;
+    text-decoration-color: #5edc8a;
+  }
+
+  .habit-streak {
+    font-size: 0.82em;
+    color: #888;
+    background: #f0f0f0;
+    border-radius: 20px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .habit-row.done .habit-streak {
+    background: #d4f5e2;
+    color: #1a8a4a;
+  }
+
+  /* Progress bar section */
+  .progress-section {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 2px dashed #e0ecff;
+  }
+
+  .progress-label {
+    font-size: 0.95em;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  .progress-bar-bg {
     width: 100%;
+    height: 18px;
+    background: #e8e8e8;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #43cea2, #185a9d);
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .progress-msg {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #185a9d;
+    min-height: 1.5em;
+    transition: opacity 0.3s;
+  }
+
+  /* Add custom habit area */
+  .add-card {
+    background: white;
+    border-radius: 22px;
+    padding: 22px 28px;
+    max-width: 500px;
+    margin: 0 auto 26px auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .add-card h2 {
+    font-size: 1.1em;
+    color: #185a9d;
+    margin-bottom: 16px;
+  }
+
+  .add-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .add-row input[type="text"] {
+    flex: 1;
+    min-width: 140px;
     padding: 11px 14px;
     border: 2px solid #ddd;
     border-radius: 12px;
     font-size: 1em;
-    margin-bottom: 16px;
     outline: none;
-    transition: border-color 0.2s;
     font-family: inherit;
-    color: #333;
+    transition: border-color 0.2s;
   }
 
-  input[type="text"]:focus,
-  input[type="number"]:focus,
-  select:focus,
-  textarea:focus {
-    border-color: #667eea;
-  }
+  .add-row input[type="text"]:focus { border-color: #43cea2; }
 
-  textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-
-  /* Emoji mood picker row */
-  .mood-label { margin-bottom: 8px; }
-
-  .mood-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
-
-  .mood-btn {
-    font-size: 1.6em;
-    background: #f4f4f4;
-    border: 2px solid transparent;
+  .emoji-select {
+    padding: 11px 8px;
+    border: 2px solid #ddd;
     border-radius: 12px;
-    padding: 6px 10px;
-    cursor: pointer;
-    transition: transform 0.15s, border-color 0.15s, background 0.15s;
-    user-select: none;
-  }
-
-  .mood-btn:hover { transform: scale(1.2); background: #ede8ff; }
-  .mood-btn.selected { border-color: #667eea; background: #ede8ff; transform: scale(1.15); }
-
-  /* Add button */
-  #addBtn {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #667eea, #f093fb);
-    color: white;
-    border: none;
-    border-radius: 14px;
-    font-size: 1.1em;
-    font-weight: bold;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: opacity 0.2s, transform 0.1s;
-  }
-
-  #addBtn:hover { opacity: 0.9; transform: translateY(-2px); }
-  #addBtn:active { transform: translateY(0); }
-
-  /* Stats bar */
-  .stats-bar {
-    max-width: 520px;
-    margin: 0 auto 20px auto;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .stat-pill {
-    background: rgba(255,255,255,0.85);
-    border-radius: 30px;
-    padding: 8px 18px;
-    font-weight: bold;
-    color: #5a4fcf;
-    font-size: 0.95em;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-
-  /* Log entries list */
-  .log-title {
-    text-align: center;
-    color: white;
-    font-size: 1.3em;
-    font-weight: bold;
-    margin-bottom: 16px;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
-  }
-
-  #logList {
-    max-width: 520px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  /* Individual book card */
-  .book-card {
-    background: white;
-    border-radius: 16px;
-    padding: 18px 20px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    animation: slideIn 0.35s ease;
-    position: relative;
-  }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .book-emoji { font-size: 2.2em; flex-shrink: 0; margin-top: 2px; }
-
-  .book-info { flex: 1; }
-
-  .book-title-text {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 4px;
-  }
-
-  .book-meta {
-    font-size: 0.88em;
-    color: #888;
-    margin-bottom: 6px;
-  }
-
-  .book-thought {
-    font-size: 0.95em;
-    color: #555;
-    background: #f7f5ff;
-    border-left: 3px solid #a78bfa;
-    padding: 7px 10px;
-    border-radius: 0 8px 8px 0;
-    margin-top: 6px;
-    font-style: italic;
-  }
-
-  /* Delete button on each card */
-  .delete-btn {
-    background: none;
-    border: none;
-    font-size: 1.1em;
-    cursor: pointer;
-    color: #ccc;
-    transition: color 0.2s;
-    padding: 0 0 0 6px;
-    flex-shrink: 0;
-  }
-  .delete-btn:hover { color: #f44; }
-
-  /* Empty state message */
-  #emptyMsg {
-    text-align: center;
-    color: rgba(255,255,255,0.75);
     font-size: 1em;
-    margin-top: 8px;
-    display: none;
+    outline: none;
+    cursor: pointer;
+    background: white;
+    transition: border-color 0.2s;
   }
 
-  /* Error shake animation */
+  .emoji-select:focus { border-color: #43cea2; }
+
+  #addHabitBtn {
+    padding: 11px 20px;
+    background: linear-gradient(135deg, #43cea2, #185a9d);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  #addHabitBtn:hover { opacity: 0.88; transform: translateY(-2px); }
+
+  /* Reset button */
+  .reset-wrap {
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto 30px auto;
+  }
+
+  #resetBtn {
+    padding: 11px 30px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 30px;
+    font-size: 0.95em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.3px;
+  }
+
+  #resetBtn:hover { background: rgba(255,255,255,0.35); transform: translateY(-2px); }
+
+  /* Celebration pop */
+  .celebrate {
+    animation: pop 0.35s ease;
+  }
+
+  @keyframes pop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+
   @keyframes shake {
     0%,100% { transform: translateX(0); }
     25% { transform: translateX(-8px); }
     75% { transform: translateX(8px); }
   }
+
   .shake { animation: shake 0.3s ease; }
 
-  /* Mobile friendly adjustments */
   @media (max-width: 480px) {
     h1 { font-size: 1.7em; }
-    .form-card { padding: 20px 16px; }
+    .main-card, .add-card { padding: 18px 14px; }
   }
 </style>
 </head>
 <body>
 
-<h1>📚 My Reading Log</h1>
-<p class="subtitle">Track every book you read — one page at a time!</p>
+<h1>✅ My Habit Tracker</h1>
+<p class="subtitle">Build great habits — one checkmark at a time!</p>
 
-<!-- Input Form -->
-<div class="form-card">
-  <h2>➕ Add a Book</h2>
+<div class="date-strip" id="dateStrip">📅 Today: —</div>
 
-  <label for="titleInput">Book Title</label>
-  <input type="text" id="titleInput" placeholder="e.g. Harry Potter and the Sorcerer's Stone" maxlength="80">
+<!-- Habit checklist card -->
+<div class="main-card" id="mainCard">
+  <h2>🌟 Today's Goals</h2>
+  <div id="habitList"></div>
 
-  <label for="pagesInput">Number of Pages Read</label>
-  <input type="number" id="pagesInput" placeholder="e.g. 223" min="1" max="9999">
-
-  <label for="genreSelect">Genre</label>
-  <select id="genreSelect">
-    <option value="">— Pick a genre —</option>
-    <option value="Fantasy">🧙 Fantasy</option>
-    <option value="Adventure">🗺️ Adventure</option>
-    <option value="Mystery">🔍 Mystery</option>
-    <option value="Sci-Fi">🚀 Sci-Fi</option>
-    <option value="Humor">😂 Humor</option>
-    <option value="Non-Fiction">📰 Non-Fiction</option>
-    <option value="Historical">🏛️ Historical</option>
-    <option value="Other">📖 Other</option>
-  </select>
-
-  <label class="mood-label">How did this book make you feel?</label>
-  <div class="mood-row" id="moodRow">
-    <button class="mood-btn" data-mood="😄 Happy">😄</button>
-    <button class="mood-btn" data-mood="😢 Sad">😢</button>
-    <button class="mood-btn" data-mood="😱 Surprised">😱</button>
-    <button class="mood-btn" data-mood="🤩 Amazed">🤩</button>
-    <button class="mood-btn" data-mood="😂 Laughing">😂</button>
-    <button class="mood-btn" data-mood="🤔 Thoughtful">🤔</button>
-    <button class="mood-btn" data-mood="😴 Bored">😴</button>
-    <button class="mood-btn" data-mood="😤 Frustrated">😤</button>
+  <!-- Progress bar -->
+  <div class="progress-section">
+    <div class="progress-label">Progress: <span id="progressCount">0</span> / <span id="progressTotal">0</span> done</div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-msg" id="progressMsg">🌱 Let's get started!</div>
   </div>
-
-  <label for="thoughtInput">One Feeling or Big Idea from this Book</label>
-  <textarea id="thoughtInput" placeholder="e.g. I learned that bravery means doing things even when you're scared."></textarea>
-
-  <button id="addBtn">📖 Add to My Log</button>
 </div>
 
-<!-- Stats Pills -->
-<div class="stats-bar">
-  <div class="stat-pill">📚 Books: <span id="statBooks">0</span></div>
-  <div class="stat-pill">📄 Pages: <span id="statPages">0</span></div>
-  <div class="stat-pill">⭐ Fave Genre: <span id="statGenre">—</span></div>
+<!-- Add a custom habit -->
+<div class="add-card">
+  <h2>➕ Add Your Own Habit</h2>
+  <div class="add-row">
+    <select class="emoji-select" id="emojiSelect">
+      <option value="⭐">⭐</option>
+      <option value="💧">💧</option>
+      <option value="🏃">🏃</option>
+      <option value="📚">📚</option>
+      <option value="🎨">🎨</option>
+      <option value="🎵">🎵</option>
+      <option value="🥦">🥦</option>
+      <option value="😴">😴</option>
+      <option value="🧹">🧹</option>
+      <option value="🙏">🙏</option>
+    </select>
+    <input type="text" id="newHabitInput" placeholder="e.g. Practice guitar" maxlength="40">
+    <button id="addHabitBtn">Add</button>
+  </div>
 </div>
 
-<!-- Log List -->
-<p class="log-title" id="logTitle" style="display:none;">📋 My Books So Far</p>
-<div id="logList"></div>
-<p id="emptyMsg">No books yet — add your first one above! 🌟</p>
+<!-- Reset day button -->
+<div class="reset-wrap">
+  <button id="resetBtn">🔄 Reset Today's Progress</button>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-  // ── State variables ──────────────────────────────────────────────
-  var books = [];          // array of book objects
-  var selectedMood = '';   // currently selected mood emoji string
+  // ── Default habits (5 to start) ─────────────────────────────────
+  var habits = [
+    { id: 1, emoji: '💧', label: 'Drink 8 glasses of water', done: false, streak: 0 },
+    { id: 2, emoji: '📚', label: 'Read for 20 minutes',       done: false, streak: 0 },
+    { id: 3, emoji: '🏃', label: 'Exercise or go for a walk', done: false, streak: 0 },
+    { id: 4, emoji: '🧹', label: 'Tidy up my space',          done: false, streak: 0 },
+    { id: 5, emoji: '😴', label: 'Be in bed by 9:30 pm',      done: false, streak: 0 }
+  ];
+
+  var nextId = 10; // id counter for new habits
 
   // ── Grab elements ────────────────────────────────────────────────
-  var titleInput   = document.getElementById('titleInput');
-  var pagesInput   = document.getElementById('pagesInput');
-  var genreSelect  = document.getElementById('genreSelect');
-  var thoughtInput = document.getElementById('thoughtInput');
-  var addBtn       = document.getElementById('addBtn');
-  var logList      = document.getElementById('logList');
-  var emptyMsg     = document.getElementById('emptyMsg');
-  var logTitle     = document.getElementById('logTitle');
-  var statBooks    = document.getElementById('statBooks');
-  var statPages    = document.getElementById('statPages');
-  var statGenre    = document.getElementById('statGenre');
-  var moodRow      = document.getElementById('moodRow');
+  var habitList     = document.getElementById('habitList');
+  var progressFill  = document.getElementById('progressFill');
+  var progressMsg   = document.getElementById('progressMsg');
+  var progressCount = document.getElementById('progressCount');
+  var progressTotal = document.getElementById('progressTotal');
+  var dateStrip     = document.getElementById('dateStrip');
+  var newHabitInput = document.getElementById('newHabitInput');
+  var emojiSelect   = document.getElementById('emojiSelect');
+  var addHabitBtn   = document.getElementById('addHabitBtn');
+  var resetBtn      = document.getElementById('resetBtn');
+  var mainCard      = document.getElementById('mainCard');
 
-  // ── Mood button selection ─────────────────────────────────────────
-  // Loop through all mood buttons and attach click listeners
-  var moodBtns = moodRow ? moodRow.querySelectorAll('.mood-btn') : [];
-  moodBtns.forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      // Deselect all, then select the clicked one
-      moodBtns.forEach(function(b) { b.classList.remove('selected'); });
-      btn.classList.add('selected');
-      selectedMood = btn.getAttribute('data-mood');
+  // ── Show today's date ────────────────────────────────────────────
+  var today = new Date();
+  var dateStr = today.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  if (dateStrip) dateStrip.textContent = '📅 ' + dateStr;
+
+  // ── Progress messages based on % done ───────────────────────────
+  function getProgressMsg(done, total) {
+    if (total === 0) return '🌱 Add some habits above!';
+    var pct = done / total;
+    if (done === 0)        return '🌱 Let\'s get started — you\'ve got this!';
+    if (pct <= 0.25)       return '🚀 Great start! Keep going!';
+    if (pct <= 0.5)        return '💪 Halfway there — awesome work!';
+    if (pct <= 0.75)       return '🔥 So close! Just a little more!';
+    if (pct < 1)           return '⚡ Almost done — finish strong!';
+    return '🎉 AMAZING! You completed ALL your habits today! 🏆';
+  }
+
+  // ── Update progress bar & message ───────────────────────────────
+  function updateProgress() {
+    var total = habits.length;
+    var done  = habits.filter(function(h) { return h.done; }).length;
+    var pct   = total > 0 ? (done / total) * 100 : 0;
+
+    progressCount.textContent = done;
+    progressTotal.textContent = total;
+    progressFill.style.width  = pct + '%';
+    progressMsg.textContent   = getProgressMsg(done, total);
+
+    // Celebrate the card when all done
+    if (done === total && total > 0) {
+      mainCard.classList.add('celebrate');
+      setTimeout(function() { mainCard.classList.remove('celebrate'); }, 400);
+    }
+  }
+
+  // ── Build the habit list from the habits array ───────────────────
+  function renderAll() {
+    habitList.innerHTML = '';
+    habits.forEach(function(habit) {
+      renderHabitRow(habit);
     });
-  });
-
-  // ── Genre emoji helper ────────────────────────────────────────────
-  function genreEmoji(genre) {
-    var map = {
-      'Fantasy':'🧙','Adventure':'🗺️','Mystery':'��','Sci-Fi':'🚀',
-      'Humor':'😂','Non-Fiction':'📰','Historical':'🏛️','Other':'📖',
-      '':'📚'
-    };
-    return map[genre] || '📚';
+    updateProgress();
   }
 
-  // ── Add button click handler ──────────────────────────────────────
-  if (addBtn) addBtn.addEventListener('click', function() {
-    var title   = titleInput.value.trim();
-    var pages   = parseInt(pagesInput.value, 10);
-    var genre   = genreSelect.value;
-    var thought = thoughtInput.value.trim();
+  // ── Render one habit row ─────────────────────────────────────────
+  function renderHabitRow(habit) {
+    var row = document.createElement('div');
+    row.className = 'habit-row' + (habit.done ? ' done' : '');
+    row.setAttribute('data-id', habit.id);
 
-    // Basic validation — title is required
-    if (!title) {
-      titleInput.classList.add('shake');
-      titleInput.focus();
-      setTimeout(function() { titleInput.classList.remove('shake'); }, 400);
-      return;
+    row.innerHTML =
+      '<div class="check-circle">' + (habit.done ? '✓' : '') + '</div>' +
+      '<div class="habit-emoji">' + habit.emoji + '</div>' +
+      '<div class="habit-label">' + escapeHTML(habit.label) + '</div>' +
+      '<div class="habit-streak">🔥 ' + habit.streak + ' day' + (habit.streak === 1 ? '' : 's') + '</div>';
+
+    // Click toggles done state
+    row.addEventListener('click', function() {
+      toggleHabit(habit.id, row);
+    });
+
+    habitList.appendChild(row);
+  }
+
+  // ── Toggle a habit done/undone ───────────────────────────────────
+  function toggleHabit(id, row) {
+    var habit = habits.find(function(h) { return h.id === id; });
+    if (!habit) return;
+
+    habit.done = !habit.done;
+
+    // Update streak count when marking done
+    if (habit.done) {
+      habit.streak += 1;
     }
 
-    // Pages must be a positive number
-    if (!pages || pages < 1) {
-      pagesInput.classList.add('shake');
-      pagesInput.focus();
-      setTimeout(function() { pagesInput.classList.remove('shake'); }, 400);
-      return;
-    }
-
-    // Build the book object
-    var book = {
-      id:      Date.now(),
-      title:   title,
-      pages:   pages,
-      genre:   genre,
-      mood:    selectedMood || '📖 Read',
-      thought: thought || '(No note left)',
-      date:    new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
-    };
-
-    // Add to beginning of array so newest is on top
-    books.unshift(book);
-
-    // Render the new card and update stats
-    renderCard(book, true);
-    updateStats();
-    clearForm();
-  });
-
-  // ── Render a single book card ─────────────────────────────────────
-  function renderCard(book, prepend) {
-    var card = document.createElement('div');
-    card.className = 'book-card';
-    card.setAttribute('data-id', book.id);
-
-    card.innerHTML =
-      '<div class="book-emoji">' + genreEmoji(book.genre) + '</div>' +
-      '<div class="book-info">' +
-        '<div class="book-title-text">' + escapeHTML(book.title) + '</div>' +
-        '<div class="book-meta">' +
-          (book.genre ? book.genre + ' · ' : '') +
-          book.pages + ' pages · ' + book.mood + ' · ' + book.date +
-        '</div>' +
-        '<div class="book-thought">"' + escapeHTML(book.thought) + '"</div>' +
-      '</div>' +
-      '<button class="delete-btn" title="Remove book" aria-label="Delete">🗑️</button>';
-
-    // Attach delete listener to this card's button
-    var delBtn = card.querySelector('.delete-btn');
-    if (delBtn) {
-      delBtn.addEventListener('click', function() {
-        deleteBook(book.id, card);
-      });
-    }
-
-    if (prepend && logList.firstChild) {
-      logList.insertBefore(card, logList.firstChild);
+    // Update the row visually
+    if (habit.done) {
+      row.classList.add('done');
+      row.querySelector('.check-circle').textContent = '✓';
     } else {
-      logList.appendChild(card);
+      row.classList.remove('done');
+      row.querySelector('.check-circle').textContent = '';
+      // Undo streak increase if unchecked
+      if (habit.streak > 0) habit.streak -= 1;
     }
 
-    showLogSection();
+    // Update streak display
+    row.querySelector('.habit-streak').textContent =
+      '🔥 ' + habit.streak + ' day' + (habit.streak === 1 ? '' : 's');
+
+    updateProgress();
   }
 
-  // ── Delete a book ─────────────────────────────────────────────────
-  function deleteBook(id, card) {
-    // Fade out the card, then remove it
-    card.style.transition = 'opacity 0.3s, transform 0.3s';
-    card.style.opacity = '0';
-    card.style.transform = 'translateX(40px)';
-    setTimeout(function() {
-      card.remove();
-      books = books.filter(function(b) { return b.id !== id; });
-      updateStats();
-      if (books.length === 0) hideLogSection();
-    }, 300);
-  }
+  // ── Add a new custom habit ───────────────────────────────────────
+  if (addHabitBtn) addHabitBtn.addEventListener('click', function() {
+    var label = newHabitInput ? newHabitInput.value.trim() : '';
+    var emoji = emojiSelect ? emojiSelect.value : '⭐';
 
-  // ── Update stats pills ────────────────────────────────────────────
-  function updateStats() {
-    var total = books.length;
-    var pages = books.reduce(function(sum, b) { return sum + b.pages; }, 0);
+    if (!label) {
+      if (newHabitInput) {
+        newHabitInput.classList.add('shake');
+        newHabitInput.focus();
+        setTimeout(function() { newHabitInput.classList.remove('shake'); }, 400);
+      }
+      return;
+    }
 
-    // Find most common genre
-    var genreCounts = {};
-    books.forEach(function(b) {
-      if (b.genre) {
-        genreCounts[b.genre] = (genreCounts[b.genre] || 0) + 1;
+    var newHabit = {
+      id:     nextId++,
+      emoji:  emoji,
+      label:  label,
+      done:   false,
+      streak: 0
+    };
+
+    habits.push(newHabit);
+    renderHabitRow(newHabit);
+    updateProgress();
+
+    // Clear input
+    newHabitInput.value = '';
+    newHabitInput.focus();
+  });
+
+  // ── Reset all habits for a new day ──────────────────────────────
+  if (resetBtn) resetBtn.addEventListener('click', function() {
+    habits.forEach(function(h) { h.done = false; });
+    renderAll();
+  });
+
+  // ── Allow Enter key to add habit ────────────────────────────────
+  if (newHabitInput) {
+    newHabitInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if (addHabitBtn) addHabitBtn.click();
       }
     });
-    var topGenre = '—';
-    var topCount = 0;
-    Object.keys(genreCounts).forEach(function(g) {
-      if (genreCounts[g] > topCount) { topCount = genreCounts[g]; topGenre = g; }
-    });
-
-    statBooks.textContent = total;
-    statPages.textContent = pages.toLocaleString();
-    statGenre.textContent = topGenre;
   }
 
-  // ── Show / hide the log section ───────────────────────────────────
-  function showLogSection() {
-    logTitle.style.display = 'block';
-    emptyMsg.style.display = 'none';
-  }
-
-  function hideLogSection() {
-    logTitle.style.display = 'none';
-    emptyMsg.style.display = 'block';
-  }
-
-  // ── Clear the form after adding ───────────────────────────────────
-  function clearForm() {
-    titleInput.value   = '';
-    pagesInput.value   = '';
-    genreSelect.value  = '';
-    thoughtInput.value = '';
-    selectedMood = '';
-    moodBtns.forEach(function(b) { b.classList.remove('selected'); });
-    titleInput.focus();
-  }
-
-  // ── Simple HTML escape to prevent XSS ────────────────────────────
+  // ── Simple HTML escape ───────────────────────────────────────────
   function escapeHTML(str) {
     return str
       .replace(/&/g, '&amp;')
@@ -489,29 +505,12 @@ document.addEventListener('DOMContentLoaded', function() {
       .replace(/"/g, '&quot;');
   }
 
-  // ── Initial state: show the empty message ─────────────────────────
-  emptyMsg.style.display = 'block';
+  // ── Initial render ───────────────────────────────────────────────
+  renderAll();
 
-  // BUTTON CHECKLIST: #addBtn ✓  .mood-btn (all) ✓  .delete-btn (dynamic) ✓
+  // BUTTON CHECKLIST: #addHabitBtn ✓  #resetBtn ✓  .habit-row (dynamic) ✓
 
 });
-
-  /* auto-injected handler for #titleInput */
-  var _btn_titleInput = document.getElementById('titleInput');
-  if (_btn_titleInput) _btn_titleInput.addEventListener('click', function() {
-    var ss = document.getElementById('startScreen') || document.querySelector('.start-screen, .menu, #menu');
-    var cv = document.querySelector('canvas');
-    if (ss) ss.style.display = 'none';
-    if (cv) cv.style.display = 'block';
-  });
-  /* auto-injected handler for #pagesInput */
-  var _btn_pagesInput = document.getElementById('pagesInput');
-  if (_btn_pagesInput) _btn_pagesInput.addEventListener('click', function() {
-    var ss = document.getElementById('startScreen') || document.querySelector('.start-screen, .menu, #menu');
-    var cv = document.querySelector('canvas');
-    if (ss) ss.style.display = 'none';
-    if (cv) cv.style.display = 'block';
-  });
 </script>
 </body>
 </html>
