@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✅ My Habit Tracker</title>
+<title>🐾 Animal Memory Match</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+    background: linear-gradient(135deg, #f9a825 0%, #e53935 50%, #8e24aa 100%);
     min-height: 100vh;
     padding: 20px;
   }
@@ -19,496 +19,456 @@
     color: white;
     font-size: 2.2em;
     margin-bottom: 6px;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.25);
   }
 
   .subtitle {
     text-align: center;
-    color: rgba(255,255,255,0.88);
+    color: rgba(255,255,255,0.9);
     font-size: 1em;
-    margin-bottom: 26px;
-  }
-
-  /* Date strip */
-  .date-strip {
-    text-align: center;
-    color: white;
-    font-size: 1em;
-    font-weight: bold;
-    margin-bottom: 20px;
-    opacity: 0.9;
-    letter-spacing: 0.5px;
-  }
-
-  /* Main card */
-  .main-card {
-    background: white;
-    border-radius: 22px;
-    padding: 28px 28px 22px;
-    max-width: 500px;
-    margin: 0 auto 26px auto;
-    box-shadow: 0 12px 36px rgba(0,0,0,0.15);
-  }
-
-  .main-card h2 {
-    font-size: 1.15em;
-    color: #185a9d;
     margin-bottom: 20px;
   }
 
-  /* Each habit row */
-  .habit-row {
+  /* Stats bar */
+  .stats-bar {
     display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    border-radius: 14px;
-    margin-bottom: 12px;
-    background: #f5f9ff;
-    border: 2px solid #e0ecff;
-    transition: background 0.25s, border-color 0.25s, transform 0.15s;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .habit-row:hover { transform: translateY(-2px); background: #eaf3ff; }
-
-  .habit-row.done {
-    background: #e8fdf0;
-    border-color: #5edc8a;
-  }
-
-  /* Circle check button */
-  .check-circle {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 3px solid #b0c8f0;
-    background: white;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 1.3em;
-    flex-shrink: 0;
-    transition: background 0.2s, border-color 0.2s, transform 0.2s;
-  }
-
-  .habit-row.done .check-circle {
-    background: #2ecc71;
-    border-color: #2ecc71;
-    transform: scale(1.15);
-  }
-
-  .habit-emoji { font-size: 1.7em; flex-shrink: 0; }
-
-  .habit-label {
-    flex: 1;
-    font-size: 1.05em;
-    font-weight: bold;
-    color: #333;
-    transition: color 0.2s;
-  }
-
-  .habit-row.done .habit-label {
-    color: #1a8a4a;
-    text-decoration: line-through;
-    text-decoration-color: #5edc8a;
-  }
-
-  .habit-streak {
-    font-size: 0.82em;
-    color: #888;
-    background: #f0f0f0;
-    border-radius: 20px;
-    padding: 3px 10px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .habit-row.done .habit-streak {
-    background: #d4f5e2;
-    color: #1a8a4a;
-  }
-
-  /* Progress bar section */
-  .progress-section {
-    margin-top: 20px;
-    padding-top: 18px;
-    border-top: 2px dashed #e0ecff;
-  }
-
-  .progress-label {
-    font-size: 0.95em;
-    color: #555;
-    margin-bottom: 8px;
-    font-weight: bold;
-  }
-
-  .progress-bar-bg {
-    width: 100%;
-    height: 18px;
-    background: #e8e8e8;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 10px;
-  }
-
-  .progress-bar-fill {
-    height: 100%;
-    border-radius: 20px;
-    background: linear-gradient(90deg, #43cea2, #185a9d);
-    transition: width 0.5s ease;
-    width: 0%;
-  }
-
-  .progress-msg {
-    text-align: center;
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #185a9d;
-    min-height: 1.5em;
-    transition: opacity 0.3s;
-  }
-
-  /* Add custom habit area */
-  .add-card {
-    background: white;
-    border-radius: 22px;
-    padding: 22px 28px;
-    max-width: 500px;
-    margin: 0 auto 26px auto;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  }
-
-  .add-card h2 {
-    font-size: 1.1em;
-    color: #185a9d;
-    margin-bottom: 16px;
-  }
-
-  .add-row {
-    display: flex;
-    gap: 10px;
+    gap: 24px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
   }
 
-  .add-row input[type="text"] {
-    flex: 1;
-    min-width: 140px;
-    padding: 11px 14px;
-    border: 2px solid #ddd;
-    border-radius: 12px;
+  .stat-box {
+    background: rgba(255,255,255,0.22);
+    border-radius: 14px;
+    padding: 10px 22px;
+    color: white;
+    font-weight: bold;
     font-size: 1em;
-    outline: none;
-    font-family: inherit;
-    transition: border-color 0.2s;
+    text-align: center;
+    min-width: 100px;
   }
 
-  .add-row input[type="text"]:focus { border-color: #43cea2; }
+  .stat-box span {
+    display: block;
+    font-size: 1.5em;
+    font-weight: 900;
+  }
 
-  .emoji-select {
-    padding: 11px 8px;
-    border: 2px solid #ddd;
-    border-radius: 12px;
-    font-size: 1em;
-    outline: none;
-    cursor: pointer;
+  /* Game card wrapper */
+  .game-wrap {
     background: white;
-    transition: border-color 0.2s;
+    border-radius: 24px;
+    padding: 24px;
+    max-width: 520px;
+    margin: 0 auto 22px auto;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+    position: relative;
   }
 
-  .emoji-select:focus { border-color: #43cea2; }
+  /* Card grid */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 10px;
+  }
 
-  #addHabitBtn {
-    padding: 11px 20px;
-    background: linear-gradient(135deg, #43cea2, #185a9d);
+  /* Each card */
+  .card {
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+    cursor: pointer;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.45s ease;
+    user-select: none;
+  }
+
+  .card.flipped { transform: rotateY(180deg); }
+  .card.matched { cursor: default; }
+
+  .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2em;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* Card back */
+  .card-back {
+    background: linear-gradient(135deg, #8e24aa, #e53935);
+    border: 3px solid rgba(255,255,255,0.3);
+    transform: rotateY(0deg);
+    font-size: 1.5em;
+  }
+
+  /* Card front */
+  .card-front {
+    background: #fff9e6;
+    border: 3px solid #f9a825;
+    transform: rotateY(180deg);
+  }
+
+  .card.matched .card-front {
+    background: #e8fdf0;
+    border-color: #2ecc71;
+    animation: matchPop 0.4s ease;
+  }
+
+  @keyframes matchPop {
+    0%   { transform: rotateY(180deg) scale(1); }
+    50%  { transform: rotateY(180deg) scale(1.18); }
+    100% { transform: rotateY(180deg) scale(1); }
+  }
+
+  /* Win message overlay */
+  .win-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.93);
+    border-radius: 24px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    text-align: center;
+    padding: 30px;
+  }
+
+  .win-overlay.show { display: flex; }
+
+  .win-emoji { font-size: 3.5em; margin-bottom: 10px; }
+
+  .win-title {
+    font-size: 1.9em;
+    font-weight: 900;
+    color: #e53935;
+    margin-bottom: 8px;
+  }
+
+  .win-msg {
+    font-size: 1.05em;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .win-stats {
+    font-size: 1em;
+    font-weight: bold;
+    color: #8e24aa;
+    margin-bottom: 24px;
+  }
+
+  /* Buttons */
+  .btn-restart {
+    padding: 13px 34px;
+    background: linear-gradient(135deg, #f9a825, #e53935);
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-    white-space: nowrap;
-  }
-
-  #addHabitBtn:hover { opacity: 0.88; transform: translateY(-2px); }
-
-  /* Reset button */
-  .reset-wrap {
-    text-align: center;
-    max-width: 500px;
-    margin: 0 auto 30px auto;
-  }
-
-  #resetBtn {
-    padding: 11px 30px;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    border: 2px solid rgba(255,255,255,0.6);
     border-radius: 30px;
-    font-size: 0.95em;
+    font-size: 1.05em;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    transition: opacity 0.2s, transform 0.15s;
     letter-spacing: 0.3px;
   }
 
-  #resetBtn:hover { background: rgba(255,255,255,0.35); transform: translateY(-2px); }
+  .btn-restart:hover { opacity: 0.88; transform: translateY(-2px); }
 
-  /* Celebration pop */
-  .celebrate {
-    animation: pop 0.35s ease;
+  .restart-wrap {
+    text-align: center;
+    max-width: 520px;
+    margin: 0 auto 30px auto;
   }
 
-  @keyframes pop {
-    0%   { transform: scale(1); }
-    50%  { transform: scale(1.08); }
-    100% { transform: scale(1); }
+  #restartBtn {
+    padding: 12px 32px;
+    background: rgba(255,255,255,0.22);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.65);
+    border-radius: 30px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  #restartBtn:hover { background: rgba(255,255,255,0.38); transform: translateY(-2px); }
+
+  /* Theme selector */
+  .theme-wrap {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .theme-wrap label {
+    color: white;
+    font-weight: bold;
+    margin-right: 8px;
+    font-size: 0.95em;
+  }
+
+  #themeSelect {
+    padding: 8px 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 0.95em;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    background: white;
+    font-weight: bold;
+    color: #333;
   }
 
   @keyframes shake {
     0%,100% { transform: translateX(0); }
-    25% { transform: translateX(-8px); }
-    75% { transform: translateX(8px); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
   }
-
   .shake { animation: shake 0.3s ease; }
 
-  @media (max-width: 480px) {
-    h1 { font-size: 1.7em; }
-    .main-card, .add-card { padding: 18px 14px; }
+  @media (max-width: 400px) {
+    .card-grid { gap: 8px; }
+    .card-face { font-size: 1.6em; }
+    h1 { font-size: 1.6em; }
   }
 </style>
 </head>
 <body>
 
-<h1>✅ My Habit Tracker</h1>
-<p class="subtitle">Build great habits — one checkmark at a time!</p>
+<h1>🐾 Memory Match!</h1>
+<p class="subtitle">Flip cards to find all matching pairs!</p>
 
-<div class="date-strip" id="dateStrip">📅 Today: —</div>
+<!-- Theme picker -->
+<div class="theme-wrap">
+  <label for="themeSelect">🎨 Theme:</label>
+  <select id="themeSelect">
+    <option value="animals">🐾 Animals</option>
+    <option value="planets">🪐 Planets</option>
+    <option value="snacks">🍕 Snacks</option>
+    <option value="emojis">😂 Emojis</option>
+  </select>
+</div>
 
-<!-- Habit checklist card -->
-<div class="main-card" id="mainCard">
-  <h2>🌟 Today's Goals</h2>
-  <div id="habitList"></div>
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-box">Moves<span id="moveCount">0</span></div>
+  <div class="stat-box">Pairs Found<span id="pairsCount">0 / 8</span></div>
+  <div class="stat-box">⏱ Time<span id="timerDisplay">0s</span></div>
+</div>
 
-  <!-- Progress bar -->
-  <div class="progress-section">
-    <div class="progress-label">Progress: <span id="progressCount">0</span> / <span id="progressTotal">0</span> done</div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" id="progressFill"></div>
-    </div>
-    <div class="progress-msg" id="progressMsg">🌱 Let's get started!</div>
+<!-- Game board -->
+<div class="game-wrap" id="gameWrap">
+  <div class="card-grid" id="cardGrid"></div>
+
+  <!-- Win overlay inside game-wrap -->
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-emoji">🏆</div>
+    <div class="win-title">You Did It!</div>
+    <div class="win-msg">You matched all the pairs!<br>Incredible memory! 🎉</div>
+    <div class="win-stats" id="winStats"></div>
+    <button class="btn-restart" id="winRestartBtn">🔄 Play Again</button>
   </div>
 </div>
 
-<!-- Add a custom habit -->
-<div class="add-card">
-  <h2>➕ Add Your Own Habit</h2>
-  <div class="add-row">
-    <select class="emoji-select" id="emojiSelect">
-      <option value="⭐">⭐</option>
-      <option value="💧">💧</option>
-      <option value="🏃">🏃</option>
-      <option value="📚">📚</option>
-      <option value="🎨">🎨</option>
-      <option value="🎵">🎵</option>
-      <option value="🥦">🥦</option>
-      <option value="😴">😴</option>
-      <option value="🧹">🧹</option>
-      <option value="🙏">🙏</option>
-    </select>
-    <input type="text" id="newHabitInput" placeholder="e.g. Practice guitar" maxlength="40">
-    <button id="addHabitBtn">Add</button>
-  </div>
-</div>
-
-<!-- Reset day button -->
-<div class="reset-wrap">
-  <button id="resetBtn">🔄 Reset Today's Progress</button>
+<!-- Restart button -->
+<div class="restart-wrap">
+  <button id="restartBtn">🔄 Restart Game</button>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-  // ── Default habits (5 to start) ─────────────────────────────────
-  var habits = [
-    { id: 1, emoji: '💧', label: 'Drink 8 glasses of water', done: false, streak: 0 },
-    { id: 2, emoji: '📚', label: 'Read for 20 minutes',       done: false, streak: 0 },
-    { id: 3, emoji: '🏃', label: 'Exercise or go for a walk', done: false, streak: 0 },
-    { id: 4, emoji: '🧹', label: 'Tidy up my space',          done: false, streak: 0 },
-    { id: 5, emoji: '😴', label: 'Be in bed by 9:30 pm',      done: false, streak: 0 }
-  ];
+  // ── Themes ──────────────────────────────────────────────────────
+  var themes = {
+    animals:  ['🐶','🐱','🐸','🐼','🦊','🐧','🦁','🐨'],
+    planets:  ['🌍','🪐','☀️','🌙','⭐','🚀','☄️','🌌'],
+    snacks:   ['🍕','🍔','🍩','🍦','🌮','🍣','🍪','🍓'],
+    emojis:   ['😂','🥳','😎','🤩','😜','🥰','😱','🤖']
+  };
 
-  var nextId = 10; // id counter for new habits
+  // ── Game state ───────────────────────────────────────────────────
+  var cards = [];           // array of card objects
+  var flipped = [];         // up to 2 cards currently flipped
+  var matched = 0;
+  var moves = 0;
+  var totalPairs = 8;
+  var locked = false;       // prevent clicking while checking
+  var timerInterval = null;
+  var secondsElapsed = 0;
 
-  // ── Grab elements ────────────────────────────────────────────────
-  var habitList     = document.getElementById('habitList');
-  var progressFill  = document.getElementById('progressFill');
-  var progressMsg   = document.getElementById('progressMsg');
-  var progressCount = document.getElementById('progressCount');
-  var progressTotal = document.getElementById('progressTotal');
-  var dateStrip     = document.getElementById('dateStrip');
-  var newHabitInput = document.getElementById('newHabitInput');
-  var emojiSelect   = document.getElementById('emojiSelect');
-  var addHabitBtn   = document.getElementById('addHabitBtn');
-  var resetBtn      = document.getElementById('resetBtn');
-  var mainCard      = document.getElementById('mainCard');
+  // ── DOM elements ─────────────────────────────────────────────────
+  var cardGrid      = document.getElementById('cardGrid');
+  var moveCount     = document.getElementById('moveCount');
+  var pairsCount    = document.getElementById('pairsCount');
+  var timerDisplay  = document.getElementById('timerDisplay');
+  var winOverlay    = document.getElementById('winOverlay');
+  var winStats      = document.getElementById('winStats');
+  var restartBtn    = document.getElementById('restartBtn');
+  var winRestartBtn = document.getElementById('winRestartBtn');
+  var themeSelect   = document.getElementById('themeSelect');
 
-  // ── Show today's date ────────────────────────────────────────────
-  var today = new Date();
-  var dateStr = today.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
-  if (dateStrip) dateStrip.textContent = '📅 ' + dateStr;
-
-  // ── Progress messages based on % done ───────────────────────────
-  function getProgressMsg(done, total) {
-    if (total === 0) return '🌱 Add some habits above!';
-    var pct = done / total;
-    if (done === 0)        return '🌱 Let\'s get started — you\'ve got this!';
-    if (pct <= 0.25)       return '🚀 Great start! Keep going!';
-    if (pct <= 0.5)        return '💪 Halfway there — awesome work!';
-    if (pct <= 0.75)       return '🔥 So close! Just a little more!';
-    if (pct < 1)           return '⚡ Almost done — finish strong!';
-    return '🎉 AMAZING! You completed ALL your habits today! 🏆';
+  // ── Shuffle array (Fisher-Yates) ─────────────────────────────────
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
   }
 
-  // ── Update progress bar & message ───────────────────────────────
-  function updateProgress() {
-    var total = habits.length;
-    var done  = habits.filter(function(h) { return h.done; }).length;
-    var pct   = total > 0 ? (done / total) * 100 : 0;
+  // ── Build card data ──────────────────────────────────────────────
+  function buildDeck() {
+    var theme = themeSelect ? themeSelect.value : 'animals';
+    var icons = themes[theme] || themes.animals;
+    totalPairs = icons.length; // 8 pairs = 16 cards
+    // Duplicate for pairs, then shuffle
+    var pairs = icons.concat(icons);
+    pairs = shuffle(pairs);
+    return pairs.map(function(icon, idx) {
+      return { id: idx, icon: icon, isFlipped: false, isMatched: false };
+    });
+  }
 
-    progressCount.textContent = done;
-    progressTotal.textContent = total;
-    progressFill.style.width  = pct + '%';
-    progressMsg.textContent   = getProgressMsg(done, total);
+  // ── Start / Restart game ─────────────────────────────────────────
+  function startGame() {
+    // Reset state
+    flipped = [];
+    matched = 0;
+    moves = 0;
+    locked = false;
+    secondsElapsed = 0;
 
-    // Celebrate the card when all done
-    if (done === total && total > 0) {
-      mainCard.classList.add('celebrate');
-      setTimeout(function() { mainCard.classList.remove('celebrate'); }, 400);
+    // Reset UI
+    moveCount.textContent = 0;
+    pairsCount.textContent = '0 / ' + totalPairs;
+    timerDisplay.textContent = '0s';
+    if (winOverlay) winOverlay.classList.remove('show');
+
+    // Stop old timer, start fresh
+    clearInterval(timerInterval);
+    timerInterval = setInterval(function() {
+      secondsElapsed++;
+      timerDisplay.textContent = secondsElapsed + 's';
+    }, 1000);
+
+    // Build and render deck
+    cards = buildDeck();
+    renderGrid();
+  }
+
+  // ── Render the card grid ─────────────────────────────────────────
+  function renderGrid() {
+    cardGrid.innerHTML = '';
+    cards.forEach(function(cardData) {
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.setAttribute('data-id', cardData.id);
+
+      card.innerHTML =
+        '<div class="card-face card-back">🌟</div>' +
+        '<div class="card-face card-front">' + cardData.icon + '</div>';
+
+      card.addEventListener('click', function() {
+        handleCardClick(cardData.id, card);
+      });
+
+      cardGrid.appendChild(card);
+    });
+  }
+
+  // ── Handle a card click ──────────────────────────────────────────
+  function handleCardClick(id, cardEl) {
+    var cardData = cards[id];
+
+    // Ignore if locked, already matched, or already flipped
+    if (locked) return;
+    if (cardData.isMatched) return;
+    if (cardData.isFlipped) return;
+    if (flipped.length >= 2) return;
+
+    // Flip it
+    cardData.isFlipped = true;
+    cardEl.classList.add('flipped');
+    flipped.push({ data: cardData, el: cardEl });
+
+    // Check pair when 2 cards are flipped
+    if (flipped.length === 2) {
+      moves++;
+      moveCount.textContent = moves;
+      checkPair();
     }
   }
 
-  // ── Build the habit list from the habits array ───────────────────
-  function renderAll() {
-    habitList.innerHTML = '';
-    habits.forEach(function(habit) {
-      renderHabitRow(habit);
-    });
-    updateProgress();
-  }
+  // ── Check if the two flipped cards match ─────────────────────────
+  function checkPair() {
+    var a = flipped[0];
+    var b = flipped[1];
 
-  // ── Render one habit row ─────────────────────────────────────────
-  function renderHabitRow(habit) {
-    var row = document.createElement('div');
-    row.className = 'habit-row' + (habit.done ? ' done' : '');
-    row.setAttribute('data-id', habit.id);
+    if (a.data.icon === b.data.icon) {
+      // Match!
+      a.data.isMatched = true;
+      b.data.isMatched = true;
+      a.el.classList.add('matched');
+      b.el.classList.add('matched');
+      matched++;
+      pairsCount.textContent = matched + ' / ' + totalPairs;
+      flipped = [];
 
-    row.innerHTML =
-      '<div class="check-circle">' + (habit.done ? '✓' : '') + '</div>' +
-      '<div class="habit-emoji">' + habit.emoji + '</div>' +
-      '<div class="habit-label">' + escapeHTML(habit.label) + '</div>' +
-      '<div class="habit-streak">🔥 ' + habit.streak + ' day' + (habit.streak === 1 ? '' : 's') + '</div>';
-
-    // Click toggles done state
-    row.addEventListener('click', function() {
-      toggleHabit(habit.id, row);
-    });
-
-    habitList.appendChild(row);
-  }
-
-  // ── Toggle a habit done/undone ───────────────────────────────────
-  function toggleHabit(id, row) {
-    var habit = habits.find(function(h) { return h.id === id; });
-    if (!habit) return;
-
-    habit.done = !habit.done;
-
-    // Update streak count when marking done
-    if (habit.done) {
-      habit.streak += 1;
-    }
-
-    // Update the row visually
-    if (habit.done) {
-      row.classList.add('done');
-      row.querySelector('.check-circle').textContent = '✓';
+      // Check win
+      if (matched === totalPairs) {
+        clearInterval(timerInterval);
+        setTimeout(showWin, 500);
+      }
     } else {
-      row.classList.remove('done');
-      row.querySelector('.check-circle').textContent = '';
-      // Undo streak increase if unchecked
-      if (habit.streak > 0) habit.streak -= 1;
+      // No match — lock and flip back after delay
+      locked = true;
+      setTimeout(function() {
+        a.data.isFlipped = false;
+        b.data.isFlipped = false;
+        a.el.classList.remove('flipped');
+        b.el.classList.remove('flipped');
+        flipped = [];
+        locked = false;
+      }, 900);
     }
-
-    // Update streak display
-    row.querySelector('.habit-streak').textContent =
-      '🔥 ' + habit.streak + ' day' + (habit.streak === 1 ? '' : 's');
-
-    updateProgress();
   }
 
-  // ── Add a new custom habit ───────────────────────────────────────
-  if (addHabitBtn) addHabitBtn.addEventListener('click', function() {
-    var label = newHabitInput ? newHabitInput.value.trim() : '';
-    var emoji = emojiSelect ? emojiSelect.value : '⭐';
+  // ── Show win screen ──────────────────────────────────────────────
+  function showWin() {
+    winStats.textContent =
+      '🕐 Time: ' + secondsElapsed + 's  |  🎯 Moves: ' + moves;
+    winOverlay.classList.add('show');
+  }
 
-    if (!label) {
-      if (newHabitInput) {
-        newHabitInput.classList.add('shake');
-        newHabitInput.focus();
-        setTimeout(function() { newHabitInput.classList.remove('shake'); }, 400);
-      }
-      return;
-    }
-
-    var newHabit = {
-      id:     nextId++,
-      emoji:  emoji,
-      label:  label,
-      done:   false,
-      streak: 0
-    };
-
-    habits.push(newHabit);
-    renderHabitRow(newHabit);
-    updateProgress();
-
-    // Clear input
-    newHabitInput.value = '';
-    newHabitInput.focus();
+  // ── Button listeners ─────────────────────────────────────────────
+  if (restartBtn) restartBtn.addEventListener('click', function() {
+    startGame();
   });
 
-  // ── Reset all habits for a new day ──────────────────────────────
-  if (resetBtn) resetBtn.addEventListener('click', function() {
-    habits.forEach(function(h) { h.done = false; });
-    renderAll();
+  if (winRestartBtn) winRestartBtn.addEventListener('click', function() {
+    startGame();
   });
 
-  // ── Allow Enter key to add habit ────────────────────────────────
-  if (newHabitInput) {
-    newHabitInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        if (addHabitBtn) addHabitBtn.click();
-      }
-    });
-  }
+  if (themeSelect) themeSelect.addEventListener('change', function() {
+    startGame();
+  });
 
-  // ── Simple HTML escape ───────────────────────────────────────────
-  function escapeHTML(str) {
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  // ── Kick off the game ────────────────────────────────────────────
+  startGame();
 
-  // ── Initial render ───────────────────────────────────────────────
-  renderAll();
-
-  // BUTTON CHECKLIST: #addHabitBtn ✓  #resetBtn ✓  .habit-row (dynamic) ✓
+  // BUTTON CHECKLIST: #restartBtn ✓  #winRestartBtn ✓  .card (dynamic) ✓
 
 });
 </script>
