@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ Star Catcher!</title>
+<title>🧠 Brain Boost Quiz!</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #0d1b4b 0%, #1a237e 50%, #4a148c 100%);
+    background: linear-gradient(135deg, #1a237e 0%, #00695c 100%);
     min-height: 100vh;
     padding: 20px;
     overflow-x: hidden;
@@ -20,27 +20,28 @@
     color: white;
     font-size: 2.2em;
     margin-bottom: 4px;
-    text-shadow: 0 0 20px rgba(255,220,0,0.7);
+    text-shadow: 0 0 20px rgba(100,255,200,0.6);
   }
 
   .subtitle {
     text-align: center;
     color: rgba(255,255,255,0.8);
     font-size: 1em;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
 
-  /* Theme selector */
-  .theme-wrap {
+  /* Topic selector */
+  .topic-wrap {
     text-align: center;
     margin-bottom: 16px;
   }
-  .theme-wrap label {
+  .topic-wrap label {
     color: white;
     font-weight: bold;
     margin-right: 8px;
+    font-size: 1em;
   }
-  #themeSelect {
+  #topicSelect {
     padding: 8px 14px;
     border-radius: 12px;
     border: none;
@@ -57,177 +58,183 @@
   .stats-bar {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 16px;
+    gap: 16px;
+    margin-bottom: 14px;
     flex-wrap: wrap;
   }
-
   .stat-box {
     background: rgba(255,255,255,0.18);
     border-radius: 14px;
-    padding: 10px 22px;
+    padding: 8px 18px;
     color: white;
     font-weight: bold;
-    font-size: 1em;
+    font-size: 0.95em;
     text-align: center;
-    min-width: 100px;
+    min-width: 90px;
   }
-
   .stat-box span {
     display: block;
-    font-size: 1.6em;
+    font-size: 1.5em;
     font-weight: 900;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    max-width: 540px;
+    margin: 0 auto 14px auto;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    height: 13px;
+    overflow: hidden;
+  }
+  #progressBar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00e676, #76ff03);
+    border-radius: 20px;
+    transition: width 0.4s ease;
   }
 
   /* Game area */
   .game-wrap {
     position: relative;
-    max-width: 520px;
+    max-width: 540px;
     margin: 0 auto 20px auto;
-    background: rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.08);
     border-radius: 24px;
-    border: 2px solid rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.18);
     overflow: hidden;
-    height: 380px;
+    min-height: 400px;
     box-shadow: 0 14px 40px rgba(0,0,0,0.35);
-    cursor: crosshair;
+    padding: 28px 24px;
   }
 
-  /* The clickable target */
-  #target {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.8em;
-    cursor: pointer;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-    border: 3px solid rgba(255,255,255,0.3);
-    transition: transform 0.1s;
-    user-select: none;
-    /* Glow effect */
-    box-shadow: 0 0 18px rgba(255,220,0,0.5);
-    animation: pulse 1.1s infinite alternate;
-  }
-
-  #target:hover { transform: scale(1.12); }
-
-  @keyframes pulse {
-    from { box-shadow: 0 0 12px rgba(255,220,0,0.4); }
-    to   { box-shadow: 0 0 28px rgba(255,220,0,0.9); }
-  }
-
-  /* Pop animation when clicked */
-  @keyframes pop {
-    0%   { transform: scale(1); opacity: 1; }
-    50%  { transform: scale(1.5); opacity: 0.6; }
-    100% { transform: scale(0); opacity: 0; }
-  }
-  .popping { animation: pop 0.25s ease forwards; pointer-events: none; }
-
-  /* Floating +1 text */
-  .plus-one {
-    position: absolute;
-    color: #FFD700;
-    font-weight: 900;
-    font-size: 1.5em;
-    pointer-events: none;
-    animation: floatUp 0.8s ease forwards;
-    text-shadow: 0 0 8px rgba(0,0,0,0.5);
-  }
-
-  @keyframes floatUp {
-    0%   { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-60px); }
-  }
-
-  /* Twinkling background stars */
-  .bg-star {
-    position: absolute;
-    color: rgba(255,255,255,0.25);
-    font-size: 1em;
-    pointer-events: none;
-    animation: twinkle 2s infinite alternate;
-  }
-
-  @keyframes twinkle {
-    from { opacity: 0.1; }
-    to   { opacity: 0.5; }
-  }
-
-  /* Win overlay */
-  .win-overlay {
+  /* Question card */
+  .question-card {
     display: none;
-    position: absolute;
-    inset: 0;
-    background: rgba(10,10,40,0.92);
-    border-radius: 22px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-    text-align: center;
-    padding: 30px;
   }
-  .win-overlay.show { display: flex; }
+  .question-card.active { display: block; }
 
-  .win-emoji { font-size: 4em; margin-bottom: 10px; }
-  .win-title {
-    font-size: 2em;
-    font-weight: 900;
-    color: #FFD700;
-    text-shadow: 0 0 16px rgba(255,215,0,0.7);
+  .q-number {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9em;
     margin-bottom: 8px;
-  }
-  .win-msg {
-    color: rgba(255,255,255,0.85);
-    font-size: 1.05em;
-    margin-bottom: 10px;
-    line-height: 1.6;
-  }
-  .win-stats {
-    color: #b39ddb;
     font-weight: bold;
-    font-size: 1em;
-    margin-bottom: 24px;
+  }
+  .q-text {
+    color: white;
+    font-size: 1.35em;
+    font-weight: 800;
+    margin-bottom: 22px;
+    line-height: 1.45;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
   }
 
-  /* Start overlay */
-  .start-overlay {
+  /* Answer buttons */
+  .answers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .ans-btn {
+    padding: 16px 10px;
+    background: rgba(255,255,255,0.14);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 16px;
+    font-size: 1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.1s, border-color 0.18s;
+    font-family: inherit;
+    line-height: 1.3;
+  }
+  .ans-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,0.26);
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.5);
+  }
+  .ans-btn.correct {
+    background: linear-gradient(135deg, #00c853, #64dd17);
+    border-color: #00e676;
+    color: white;
+  }
+  .ans-btn.wrong {
+    background: linear-gradient(135deg, #d32f2f, #e53935);
+    border-color: #ff5252;
+    color: white;
+  }
+  .ans-btn:disabled { cursor: default; }
+
+  /* Feedback message */
+  .feedback {
+    min-height: 32px;
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 800;
+    margin-bottom: 14px;
+    transition: opacity 0.3s;
+  }
+  .feedback.correct { color: #69ff47; }
+  .feedback.wrong   { color: #ff6e6e; }
+
+  /* Next button */
+  #nextBtn {
+    display: none;
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #FFD700, #ff6f00);
+    color: #1a237e;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.1em;
+    font-weight: 900;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    font-family: inherit;
+  }
+  #nextBtn:hover { opacity: 0.88; transform: translateY(-2px); }
+
+  /* Overlays */
+  .overlay {
     display: flex;
     position: absolute;
     inset: 0;
-    background: rgba(10,10,40,0.88);
+    background: rgba(10,20,40,0.93);
     border-radius: 22px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 60;
     text-align: center;
-    padding: 30px;
+    padding: 28px;
   }
-  .start-overlay.hidden { display: none; }
+  .overlay.hidden { display: none; }
 
-  .start-emoji { font-size: 4em; margin-bottom: 12px; }
-  .start-title {
-    font-size: 1.7em;
+  .overlay-emoji { font-size: 3.8em; margin-bottom: 10px; }
+  .overlay-title {
+    font-size: 1.8em;
     font-weight: 900;
     color: #FFD700;
     margin-bottom: 10px;
+    text-shadow: 0 0 14px rgba(255,215,0,0.6);
   }
-  .start-msg {
-    color: rgba(255,255,255,0.8);
+  .overlay-msg {
+    color: rgba(255,255,255,0.85);
     font-size: 1em;
-    margin-bottom: 24px;
-    line-height: 1.6;
+    margin-bottom: 10px;
+    line-height: 1.65;
+  }
+  .overlay-stats {
+    color: #80cbc4;
+    font-weight: bold;
+    font-size: 1em;
+    margin-bottom: 22px;
   }
 
-  /* Buttons */
   .btn {
-    padding: 13px 36px;
+    padding: 13px 34px;
     background: linear-gradient(135deg, #FFD700, #ff6f00);
     color: #1a237e;
     border: none;
@@ -236,58 +243,75 @@
     font-weight: 900;
     cursor: pointer;
     transition: opacity 0.2s, transform 0.15s;
-    letter-spacing: 0.3px;
+    font-family: inherit;
+    margin-top: 6px;
   }
   .btn:hover { opacity: 0.88; transform: translateY(-2px); }
 
-  /* Progress bar */
-  .progress-wrap {
-    max-width: 520px;
-    margin: 0 auto 14px auto;
-    background: rgba(255,255,255,0.15);
-    border-radius: 20px;
-    height: 14px;
-    overflow: hidden;
+  /* Floating sparkle */
+  .sparkle {
+    position: absolute;
+    pointer-events: none;
+    font-size: 1.4em;
+    animation: floatUp 0.9s ease forwards;
+    z-index: 10;
   }
-  #progressBar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #FFD700, #ff6f00);
-    border-radius: 20px;
-    transition: width 0.3s ease;
+  @keyframes floatUp {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-70px) scale(1.4); }
   }
 
-  @media (max-width: 400px) {
-    .game-wrap { height: 300px; }
-    #target { width: 58px; height: 58px; font-size: 2.2em; }
+  /* Streak badge */
+  .streak-badge {
+    display: none;
+    position: absolute;
+    top: 12px; right: 16px;
+    background: linear-gradient(135deg, #ff6f00, #FFD700);
+    color: #1a237e;
+    font-weight: 900;
+    font-size: 0.9em;
+    border-radius: 20px;
+    padding: 5px 13px;
+    z-index: 5;
+    animation: popIn 0.3s ease;
+  }
+  @keyframes popIn {
+    0%   { transform: scale(0.5); }
+    80%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+  @media (max-width: 420px) {
+    .answers { grid-template-columns: 1fr; }
     h1 { font-size: 1.6em; }
+    .q-text { font-size: 1.15em; }
   }
 </style>
 </head>
 <body>
 
-<h1>⭐ Star Catcher!</h1>
-<p class="subtitle">Click the target 20 times to win!</p>
+<h1>🧠 Brain Boost Quiz!</h1>
+<p class="subtitle">Answer questions and train your brain!</p>
 
-<!-- Theme selector -->
-<div class="theme-wrap">
-  <label for="themeSelect">🎨 Theme:</label>
-  <select id="themeSelect">
-    <option value="stars">⭐ Catch Stars</option>
-    <option value="monsters">👾 Tap Monsters</option>
-    <option value="coins">🪙 Collect Coins</option>
-    <option value="robots">🤖 Save Robots</option>
+<!-- Topic selector -->
+<div class="topic-wrap">
+  <label for="topicSelect">📚 Topic:</label>
+  <select id="topicSelect">
+    <option value="science">🔬 Science</option>
+    <option value="math">➕ Math</option>
+    <option value="geography">🌍 Geography</option>
+    <option value="animals">🐾 Animals</option>
   </select>
 </div>
 
 <!-- Stats -->
 <div class="stats-bar">
   <div class="stat-box">Score<span id="scoreDisplay">0</span></div>
-  <div class="stat-box">Goal<span id="goalDisplay">20</span></div>
-  <div class="stat-box">⏱ Time<span id="timerDisplay">0s</span></div>
+  <div class="stat-box">Question<span id="qNumDisplay">0/5</span></div>
+  <div class="stat-box">🔥 Streak<span id="streakDisplay">0</span></div>
 </div>
 
-<!-- Progress bar -->
+<!-- Progress -->
 <div class="progress-wrap">
   <div id="progressBar"></div>
 </div>
@@ -295,26 +319,37 @@
 <!-- Game area -->
 <div class="game-wrap" id="gameWrap">
 
-  <!-- Background decorations (added by JS) -->
+  <!-- Streak badge -->
+  <div class="streak-badge" id="streakBadge">🔥 Streak!</div>
 
-  <!-- The target -->
-  <div id="target">⭐</div>
-
-  <!-- Start overlay -->
-  <div class="start-overlay" id="startOverlay">
-    <div class="start-emoji" id="startEmoji">⭐</div>
-    <div class="start-title" id="startTitle">Catch Stars!</div>
-    <div class="start-msg" id="startMsg">Click the star as fast as you can!<br>Get <strong>20 points</strong> to win! 🏆</div>
-    <button class="btn" id="startBtn">▶ Start Game</button>
+  <!-- Question card (populated by JS) -->
+  <div class="question-card active" id="questionCard">
+    <div class="q-number" id="qNumber">Question 1 of 5</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="answers" id="answersGrid"></div>
+    <div class="feedback" id="feedback"></div>
+    <button id="nextBtn">➡ Next Question</button>
   </div>
 
-  <!-- Win overlay -->
-  <div class="win-overlay" id="winOverlay">
-    <div class="win-emoji" id="winEmoji">🏆</div>
-    <div class="win-title">You Win! 🎉</div>
-    <div class="win-msg" id="winMsg">Amazing clicking! You caught all 20 stars!</div>
-    <div class="win-stats" id="winStats"></div>
-    <button class="btn" id="winRestartBtn">🔄 Play Again</button>
+  <!-- Start overlay -->
+  <div class="overlay" id="startOverlay">
+    <div class="overlay-emoji">🧠</div>
+    <div class="overlay-title">Brain Boost Quiz!</div>
+    <div class="overlay-msg">
+      A fun quiz app for ages 10–14!<br>
+      Pick a topic, answer <strong>5 questions</strong>,<br>
+      and see how smart you are! 🏆
+    </div>
+    <button class="btn" id="startBtn">▶ Start Quiz</button>
+  </div>
+
+  <!-- Results overlay -->
+  <div class="overlay hidden" id="resultsOverlay">
+    <div class="overlay-emoji" id="resultsEmoji">🏆</div>
+    <div class="overlay-title" id="resultsTitle">Quiz Done!</div>
+    <div class="overlay-msg" id="resultsMsg">Great job!</div>
+    <div class="overlay-stats" id="resultsStats"></div>
+    <button class="btn" id="restartBtn">🔄 Try Again</button>
   </div>
 
 </div>
@@ -322,219 +357,228 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-  // ── Themes ──────────────────────────────────────────────────────
-  var themes = {
-    stars:    { icon: '⭐', title: 'Catch Stars!',    msg: 'Click the star as fast as you can!',    win: 'Amazing! You caught all 20 stars! ⭐',    bg: '✨', glow: 'rgba(255,220,0,0.7)'   },
-    monsters: { icon: '👾', title: 'Tap Monsters!',   msg: 'Tap the monster before it escapes!',     win: 'You defeated all 20 monsters! 👾',         bg: '💀', glow: 'rgba(0,255,100,0.6)'  },
-    coins:    { icon: '🪙', title: 'Collect Coins!',  msg: 'Grab the coin before it disappears!',    win: 'You collected all 20 coins! 🪙',            bg: '💎', glow: 'rgba(255,200,0,0.7)'  },
-    robots:   { icon: '🤖', title: 'Save Robots!',    msg: 'Click the robot to rescue it!',          win: 'You saved all 20 robots! 🤖',               bg: '🔧', glow: 'rgba(0,200,255,0.6)'  }
+  // ── Question bank ───────────────────────────────────────────────
+  var questions = {
+    science: [
+      { q: 'What planet is closest to the Sun?',         a: ['Mercury','Venus','Earth','Mars'],       c: 0 },
+      { q: 'What gas do plants absorb from the air?',    a: ['Oxygen','Nitrogen','Carbon Dioxide','Hydrogen'], c: 2 },
+      { q: 'How many bones are in the adult human body?',a: ['106','206','306','406'],                c: 1 },
+      { q: 'What is the powerhouse of the cell?',        a: ['Nucleus','Ribosome','Mitochondria','Vacuole'], c: 2 },
+      { q: 'Which planet has the most moons?',           a: ['Jupiter','Saturn','Neptune','Uranus'],  c: 1 },
+      { q: 'What is H₂O better known as?',              a: ['Salt','Water','Sugar','Acid'],          c: 1 },
+      { q: 'Sound travels fastest through which material?', a: ['Air','Water','Wood','Steel'],        c: 3 },
+    ],
+    math: [
+      { q: 'What is 7 × 8?',                            a: ['54','56','63','48'],                    c: 1 },
+      { q: 'What is the square root of 144?',           a: ['11','14','12','13'],                    c: 2 },
+      { q: 'What is 25% of 200?',                       a: ['25','75','50','100'],                   c: 2 },
+      { q: 'Which of these is a prime number?',         a: ['9','15','17','21'],                     c: 2 },
+      { q: 'What is 3³ (3 to the power 3)?',            a: ['6','9','27','18'],                      c: 2 },
+      { q: 'How many degrees in a right angle?',        a: ['45°','180°','90°','360°'],              c: 2 },
+      { q: 'What is 1/4 as a decimal?',                 a: ['0.4','2.5','0.14','0.25'],              c: 3 },
+    ],
+    geography: [
+      { q: 'What is the capital city of France?',       a: ['Rome','London','Paris','Berlin'],       c: 2 },
+      { q: 'Which is the longest river in the world?',  a: ['Amazon','Yangtze','Nile','Mississippi'],c: 2 },
+      { q: 'On which continent is Brazil located?',     a: ['Africa','Europe','Asia','South America'],c: 3 },
+      { q: 'What is the largest country by area?',      a: ['Canada','USA','China','Russia'],        c: 3 },
+      { q: 'Which ocean is the biggest?',               a: ['Atlantic','Indian','Pacific','Arctic'],  c: 2 },
+      { q: 'What is the capital of Japan?',             a: ['Beijing','Seoul','Tokyo','Bangkok'],     c: 2 },
+      { q: 'How many continents are there on Earth?',   a: ['5','6','7','8'],                        c: 2 },
+    ],
+    animals: [
+      { q: 'What is the fastest land animal?',          a: ['Lion','Cheetah','Horse','Leopard'],     c: 1 },
+      { q: 'How many legs does a spider have?',         a: ['6','8','10','4'],                       c: 1 },
+      { q: 'What do you call a group of wolves?',       a: ['Herd','Flock','Pack','Pride'],          c: 2 },
+      { q: 'Which animal is the largest mammal?',       a: ['Elephant','Blue Whale','Giraffe','Hippo'], c: 1 },
+      { q: 'What is the only mammal that can fly?',     a: ['Flying squirrel','Bat','Eagle','Owl'],  c: 1 },
+      { q: 'How many hearts does an octopus have?',     a: ['1','2','3','4'],                        c: 2 },
+      { q: 'Which bird cannot fly?',                    a: ['Eagle','Penguin','Parrot','Sparrow'],   c: 1 },
+    ]
   };
 
-  var GOAL = 20;
+  var TOTAL_Q = 5;
 
-  // ── Game state ───────────────────────────────────────────────────
+  // ── Game state ──────────────────────────────────────────────────
   var score = 0;
-  var timerInterval = null;
-  var secondsElapsed = 0;
+  var streak = 0;
+  var currentQ = 0;
+  var quizList = [];
+  var answered = false;
   var gameRunning = false;
-  var currentTheme = 'stars';
-  var moveTimeout = null;
 
-  // ── DOM refs ─────────────────────────────────────────────────────
-  var target        = document.getElementById('target');
-  var scoreDisplay  = document.getElementById('scoreDisplay');
-  var timerDisplay  = document.getElementById('timerDisplay');
-  var progressBar   = document.getElementById('progressBar');
-  var winOverlay    = document.getElementById('winOverlay');
-  var winStats      = document.getElementById('winStats');
-  var winMsg        = document.getElementById('winMsg');
-  var winEmoji      = document.getElementById('winEmoji');
-  var startOverlay  = document.getElementById('startOverlay');
-  var startEmoji    = document.getElementById('startEmoji');
-  var startTitle    = document.getElementById('startTitle');
-  var startMsg      = document.getElementById('startMsg');
-  var startBtn      = document.getElementById('startBtn');
-  var winRestartBtn = document.getElementById('winRestartBtn');
-  var themeSelect   = document.getElementById('themeSelect');
-  var gameWrap      = document.getElementById('gameWrap');
+  // ── DOM refs ────────────────────────────────────────────────────
+  var scoreDisplay   = document.getElementById('scoreDisplay');
+  var qNumDisplay    = document.getElementById('qNumDisplay');
+  var streakDisplay  = document.getElementById('streakDisplay');
+  var progressBar    = document.getElementById('progressBar');
+  var qNumber        = document.getElementById('qNumber');
+  var qText          = document.getElementById('qText');
+  var answersGrid    = document.getElementById('answersGrid');
+  var feedback       = document.getElementById('feedback');
+  var nextBtn        = document.getElementById('nextBtn');
+  var startOverlay   = document.getElementById('startOverlay');
+  var resultsOverlay = document.getElementById('resultsOverlay');
+  var resultsEmoji   = document.getElementById('resultsEmoji');
+  var resultsTitle   = document.getElementById('resultsTitle');
+  var resultsMsg     = document.getElementById('resultsMsg');
+  var resultsStats   = document.getElementById('resultsStats');
+  var startBtn       = document.getElementById('startBtn');
+  var restartBtn     = document.getElementById('restartBtn');
+  var topicSelect    = document.getElementById('topicSelect');
+  var gameWrap       = document.getElementById('gameWrap');
+  var streakBadge    = document.getElementById('streakBadge');
 
-  // ── Apply theme visuals ──────────────────────────────────────────
-  function applyTheme(t) {
-    var th = themes[t];
-    target.textContent = th.icon;
-    target.style.boxShadow = '0 0 18px ' + th.glow;
-    startEmoji.textContent = th.icon;
-    startTitle.textContent = th.title;
-    startMsg.innerHTML = th.msg + '<br>Get <strong>20 points</strong> to win! 🏆';
-    winEmoji.textContent = '🏆';
-    // Restyle bg stars
-    addBgDecorations(th.bg);
-  }
-
-  // ── Add background decorations ───────────────────────────────────
-  function addBgDecorations(icon) {
-    // Remove old ones
-    var old = gameWrap.querySelectorAll('.bg-star');
-    old.forEach(function(el) { el.remove(); });
-    // Add new ones
-    for (var i = 0; i < 12; i++) {
-      var s = document.createElement('div');
-      s.className = 'bg-star';
-      s.textContent = icon;
-      s.style.left = Math.random() * 90 + '%';
-      s.style.top  = Math.random() * 90 + '%';
-      s.style.animationDelay = (Math.random() * 2) + 's';
-      s.style.fontSize = (0.8 + Math.random() * 0.8) + 'em';
-      gameWrap.appendChild(s);
+  // ── Shuffle helper ───────────────────────────────────────────────
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
     }
+    return a;
   }
 
-  // ── Place target at random position ─────────────────────────────
-  function moveTarget() {
-    var wrapW = gameWrap.offsetWidth  || 520;
-    var wrapH = gameWrap.offsetHeight || 380;
-    var size  = 70;
-    var margin = 10;
-    var x = margin + Math.random() * (wrapW - size - margin * 2);
-    var y = margin + Math.random() * (wrapH - size - margin * 2);
-    target.style.left = x + 'px';
-    target.style.top  = y + 'px';
+  // ── Pick random questions ────────────────────────────────────────
+  function buildQuizList(topic) {
+    var pool = questions[topic] || questions.science;
+    return shuffle(pool).slice(0, TOTAL_Q);
   }
 
-  // ── Auto-move target every few seconds ──────────────────────────
-  function scheduleAutoMove() {
-    clearTimeout(moveTimeout);
-    if (!gameRunning) return;
-    // Speed increases as score goes up
-    var delay = Math.max(800, 2200 - score * 60);
-    moveTimeout = setTimeout(function() {
-      if (gameRunning) {
-        wiggleTarget();
-        moveTarget();
-        scheduleAutoMove();
-      }
-    }, delay);
+  // ── Render current question ──────────────────────────────────────
+  function renderQuestion() {
+    answered = false;
+    feedback.textContent = '';
+    feedback.className = 'feedback';
+    nextBtn.style.display = 'none';
+    streakBadge.style.display = 'none';
+
+    var q = quizList[currentQ];
+    qNumber.textContent = 'Question ' + (currentQ + 1) + ' of ' + TOTAL_Q;
+    qNumDisplay.textContent = (currentQ + 1) + '/' + TOTAL_Q;
+    qText.textContent = q.q;
+    progressBar.style.width = (currentQ / TOTAL_Q * 100) + '%';
+
+    // Build answer buttons
+    answersGrid.innerHTML = '';
+    q.a.forEach(function(answerText, idx) {
+      var btn = document.createElement('button');
+      btn.className = 'ans-btn';
+      btn.textContent = answerText;
+      btn.addEventListener('click', function() {
+        handleAnswer(idx, btn, q.c);
+      });
+      answersGrid.appendChild(btn);
+    });
   }
 
-  // Short wiggle when auto-moving
-  function wiggleTarget() {
-    target.style.transition = 'left 0.3s ease, top 0.3s ease';
-    setTimeout(function() {
-      target.style.transition = 'transform 0.1s';
-    }, 350);
-  }
+  // ── Handle answer click ──────────────────────────────────────────
+  function handleAnswer(chosen, btn, correct) {
+    if (answered) return;
+    answered = true;
 
-  // ── Start / Restart game ─────────────────────────────────────────
-  function startGame() {
-    score = 0;
-    secondsElapsed = 0;
-    gameRunning = true;
+    // Disable all buttons
+    var allBtns = answersGrid.querySelectorAll('.ans-btn');
+    allBtns.forEach(function(b) { b.disabled = true; });
 
-    scoreDisplay.textContent = 0;
-    timerDisplay.textContent = '0s';
-    progressBar.style.width = '0%';
-
-    if (winOverlay)   winOverlay.classList.remove('show');
-    if (startOverlay) startOverlay.classList.add('hidden');
-
-    target.style.opacity = '1';
-    target.style.transform = 'scale(1)';
-    target.classList.remove('popping');
-
-    clearInterval(timerInterval);
-    timerInterval = setInterval(function() {
-      secondsElapsed++;
-      timerDisplay.textContent = secondsElapsed + 's';
-    }, 1000);
-
-    moveTarget();
-    scheduleAutoMove();
-  }
-
-  // ── Handle target click ──────────────────────────────────────────
-  function handleTargetClick(e) {
-    if (!gameRunning) return;
-    e.stopPropagation();
-
-    // Pop animation
-    target.classList.add('popping');
-
-    // Floating +1
-    spawnPlusOne(e.clientX, e.clientY);
-
-    score++;
-    scoreDisplay.textContent = score;
-    progressBar.style.width = (score / GOAL * 100) + '%';
-
-    // Win check
-    if (score >= GOAL) {
-      gameRunning = false;
-      clearInterval(timerInterval);
-      clearTimeout(moveTimeout);
-      setTimeout(showWin, 300);
-      return;
+    if (chosen === correct) {
+      btn.classList.add('correct');
+      score++;
+      streak++;
+      scoreDisplay.textContent = score;
+      streakDisplay.textContent = streak;
+      feedback.textContent = getCorrectMsg();
+      feedback.className = 'feedback correct';
+      spawnSparkle('✨');
+      if (streak >= 2) showStreakBadge();
+    } else {
+      btn.classList.add('wrong');
+      allBtns[correct].classList.add('correct');
+      streak = 0;
+      streakDisplay.textContent = 0;
+      feedback.textContent = getWrongMsg();
+      feedback.className = 'feedback wrong';
     }
 
-    // Move target after pop finishes
-    setTimeout(function() {
-      target.classList.remove('popping');
-      target.style.opacity = '1';
-      target.style.transform = 'scale(1)';
-      moveTarget();
-      scheduleAutoMove();
-    }, 260);
+    // Show next/finish
+    var isLast = (currentQ >= TOTAL_Q - 1);
+    nextBtn.textContent = isLast ? '🏆 See Results' : '➡ Next Question';
+    nextBtn.style.display = 'block';
   }
 
-  // ── Floating +1 label ───────────────────────────────────────────
-  function spawnPlusOne(cx, cy) {
-    var rect = gameWrap.getBoundingClientRect();
+  // ── Feedback messages ───────────────────────────────────────────
+  function getCorrectMsg() {
+    var msgs = ['✅ Correct! Great job!', '🎉 Nailed it!', '⭐ Excellent!', '💡 Brilliant!', '🔥 You got it!'];
+    return msgs[Math.floor(Math.random() * msgs.length)];
+  }
+  function getWrongMsg() {
+    var msgs = ['❌ Not quite!', '😬 Wrong, but keep going!', '💪 Try to remember this one!', '🤔 Close, but no!'];
+    return msgs[Math.floor(Math.random() * msgs.length)];
+  }
+
+  // ── Sparkle effect ───────────────────────────────────────────────
+  function spawnSparkle(icon) {
     var el = document.createElement('div');
-    el.className = 'plus-one';
-    el.textContent = '+1';
-    el.style.left = (cx - rect.left) + 'px';
-    el.style.top  = (cy - rect.top)  + 'px';
+    el.className = 'sparkle';
+    el.textContent = icon;
+    el.style.left = (20 + Math.random() * 60) + '%';
+    el.style.top  = (30 + Math.random() * 30) + '%';
     gameWrap.appendChild(el);
-    setTimeout(function() { el.remove(); }, 800);
+    setTimeout(function() { el.remove(); }, 900);
   }
 
-  // ── Show win screen ──────────────────────────────────────────────
-  function showWin() {
-    var th = themes[currentTheme];
-    winMsg.textContent = th.win;
-    winStats.textContent = '🕐 Time: ' + secondsElapsed + 's  |  🎯 Clicks: ' + score;
-    winOverlay.classList.add('show');
-    target.style.opacity = '0';
+  // ── Streak badge ─────────────────────────────────────────────────
+  function showStreakBadge() {
+    streakBadge.textContent = '🔥 ' + streak + ' in a row!';
+    streakBadge.style.display = 'block';
   }
 
-  // ── Button & input listeners ─────────────────────────────────────
-  if (startBtn) startBtn.addEventListener('click', function() {
-    currentTheme = themeSelect ? themeSelect.value : 'stars';
-    applyTheme(currentTheme);
-    startGame();
-  });
+  // ── Show results ─────────────────────────────────────────────────
+  function showResults() {
+    progressBar.style.width = '100%';
+    var pct = Math.round(score / TOTAL_Q * 100);
+    var emoji, title, msg;
+    if (pct === 100) { emoji = '🏆'; title = 'Perfect Score!';  msg = 'You got every question right! Amazing!'; }
+    else if (pct >= 60) { emoji = '🌟'; title = 'Well Done!';   msg = 'Great effort! Keep practicing!'; }
+    else              { emoji = '💪'; title = 'Keep Trying!';   msg = 'Study up and try again. You can do it!'; }
 
-  if (winRestartBtn) winRestartBtn.addEventListener('click', function() {
-    currentTheme = themeSelect ? themeSelect.value : 'stars';
-    applyTheme(currentTheme);
-    startGame();
-  });
+    resultsEmoji.textContent = emoji;
+    resultsTitle.textContent = title;
+    resultsMsg.textContent   = msg;
+    resultsStats.textContent = '🎯 Score: ' + score + '/' + TOTAL_Q + '  |  ' + pct + '%  |  🔥 Best streak: ' + streak;
+    resultsOverlay.classList.remove('hidden');
+    gameRunning = false;
+  }
 
-  if (themeSelect) themeSelect.addEventListener('change', function() {
-    currentTheme = themeSelect.value;
-    applyTheme(currentTheme);
-    // Restart if game is already running
-    if (gameRunning || winOverlay.classList.contains('show')) {
-      startGame();
+  // ── Start game ───────────────────────────────────────────────────
+  function startGame() {
+    var topic = topicSelect ? topicSelect.value : 'science';
+    score = 0; streak = 0; currentQ = 0; gameRunning = true;
+    scoreDisplay.textContent = 0;
+    streakDisplay.textContent = 0;
+    qNumDisplay.textContent = '1/' + TOTAL_Q;
+    progressBar.style.width = '0%';
+    quizList = buildQuizList(topic);
+    if (startOverlay)   startOverlay.classList.add('hidden');
+    if (resultsOverlay) resultsOverlay.classList.add('hidden');
+    renderQuestion();
+  }
+
+  // ── Button listeners ─────────────────────────────────────────────
+  if (startBtn) startBtn.addEventListener('click', function() { startGame(); });
+
+  if (restartBtn) restartBtn.addEventListener('click', function() { startGame(); });
+
+  if (nextBtn) nextBtn.addEventListener('click', function() {
+    currentQ++;
+    if (currentQ >= TOTAL_Q) {
+      showResults();
+    } else {
+      renderQuestion();
     }
   });
 
-  if (target) target.addEventListener('click', handleTargetClick);
-
-  // ── Initial setup ────────────────────────────────────────────────
-  applyTheme('stars');
-  moveTarget(); // pre-position target under overlays
-
-  // BUTTON CHECKLIST: #startBtn ✓  #winRestartBtn ✓  #target ✓
+  // BUTTON CHECKLIST: #startBtn ✓  #restartBtn ✓  #nextBtn ✓
 
 });
 </script>
